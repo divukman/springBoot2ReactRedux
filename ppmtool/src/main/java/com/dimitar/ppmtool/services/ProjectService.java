@@ -20,11 +20,6 @@ public class ProjectService {
 			final String projectIdentifierUppercased = project.getProjectIdentifier().toUpperCase();
 			project.setProjectIdentifier(projectIdentifierUppercased);
 
-//			final Project projectInDB = projectRepository.findByProjectIdentifier(projectIdentifierUppercased);
-//			if (projectInDB != null) {
-//				projectRepository.delete(projectInDB);
-//			}
-
 			return projectRepository.save(project);
 		} catch (Exception e) {
 			throw new ProjectIdException("Project ID '" + project.getProjectIdentifier().toUpperCase() + "' already exists.");
