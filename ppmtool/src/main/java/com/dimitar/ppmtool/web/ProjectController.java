@@ -15,6 +15,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/project")
+@CrossOrigin
 @SuppressWarnings("Duplicates")
 public class ProjectController {
 
