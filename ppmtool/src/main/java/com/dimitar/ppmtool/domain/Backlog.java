@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -28,4 +30,6 @@ public class Backlog {
 
 
 	// One to many with the project tasks
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "backlog")
+	private List<ProjectTask> projectTaskList = new ArrayList<ProjectTask>();
 }

@@ -1,5 +1,6 @@
 package com.dimitar.ppmtool.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -40,10 +41,14 @@ public class ProjectTask {
 
 	private Date updated_At;
 
-	// Many to one with the backlog
 
 	@Column(updatable = false )
 	private String projectIdentifier;
+
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+	@JoinColumn(name = "backlog_id", nullable = false, updatable = false)
+	@JsonIgnore
+	private Backlog backlog;
 
 	@PrePersist
 	private void onCreate() {
