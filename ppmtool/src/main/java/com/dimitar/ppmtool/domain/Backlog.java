@@ -1,0 +1,29 @@
+package com.dimitar.ppmtool.domain;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
+@NoArgsConstructor
+@Getter
+@Setter
+public class Backlog {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	private Integer PTSequence = 0;
+
+	private String projectIdentifier;
+
+	// One to One with the project
+
+	// One to many with the project tasks
+}
