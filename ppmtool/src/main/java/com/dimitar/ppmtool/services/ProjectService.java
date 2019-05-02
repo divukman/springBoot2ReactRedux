@@ -1,7 +1,9 @@
 package com.dimitar.ppmtool.services;
 
+import com.dimitar.ppmtool.domain.Backlog;
 import com.dimitar.ppmtool.domain.Project;
 import com.dimitar.ppmtool.exceptions.ProjectIdException;
+import com.dimitar.ppmtool.repositories.BacklogRepository;
 import com.dimitar.ppmtool.repositories.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,16 +11,29 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProjectService {
 	private final ProjectRepository projectRepository;
+	private final BacklogRepository backlogRepository;
 
 	@Autowired
-	public ProjectService(final ProjectRepository projectRepository) {
+	public ProjectService(final ProjectRepository projectRepository, final BacklogRepository backlogRepository) {
 		this.projectRepository = projectRepository;
+		this.backlogRepository = backlogRepository;
 	}
 
 	public Project saveOrUpdateProject(final Project project) {
 		try {
 			final String projectIdentifierUppercased = project.getProjectIdentifier().toUpperCase();
 			project.setProjectIdentifier(projectIdentifierUppercased);
+
+			// Ovo mi se cini lose, ali jebiga. Ako bi slucajno proslijedio ID, dobija bi problem.
+			if (project.getId() == null) {
+				final Backlog backlog = new Backlog();
+				project.setBacklog(backlog);
+				backlog.setProject(project);
+				backlog.setProjectIdentifier(projectIdentifierUppercased);
+			} else {
+				final Backlog backlog = backlogRepository.findByProjectIdentifier(projectIdentifierUppercased);
+				project.setBacklog(backlog);
+			}
 
 			return projectRepository.save(project);
 		} catch (Exception e) {
