@@ -3,9 +3,12 @@ package com.dimitar.ppmtool.services;
 import com.dimitar.ppmtool.domain.Backlog;
 import com.dimitar.ppmtool.domain.ProjectTask;
 import com.dimitar.ppmtool.repositories.BacklogRepository;
+import com.dimitar.ppmtool.repositories.ProjectRepository;
 import com.dimitar.ppmtool.repositories.ProjectTaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ProjectTaskService {
@@ -39,5 +42,9 @@ public class ProjectTaskService {
 		}
 
 		return projectTaskRepository.save(projectTask);
+	}
+
+	public List<ProjectTask> getProjectTasks(final String projectIdentifier) {
+		return projectTaskRepository.findAllByProjectIdentifier(projectIdentifier);
 	}
 }
