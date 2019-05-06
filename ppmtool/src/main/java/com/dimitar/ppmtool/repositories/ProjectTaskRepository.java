@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface ProjectTaskRepository extends CrudRepository<ProjectTask, Long> {
 
-    List<ProjectTask> findAllByProjectIdentifierOOrderByPriority (final String projectIdentifier);
+    List<ProjectTask> findAllByProjectIdentifierOrderByPriority(final String projectIdentifier);
 
 }

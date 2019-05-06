@@ -45,6 +45,6 @@ public class ProjectTaskService {
 	}
 
 	public List<ProjectTask> getProjectTasks(final String projectIdentifier) {
-		return projectTaskRepository.findAllByProjectIdentifier(projectIdentifier);
+		return projectTaskRepository.findAllByProjectIdentifierOrderByPriority(projectIdentifier);
 	}
 }
