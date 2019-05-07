@@ -2,6 +2,8 @@ package com.dimitar.ppmtool.services;
 
 import com.dimitar.ppmtool.domain.Backlog;
 import com.dimitar.ppmtool.domain.ProjectTask;
+import com.dimitar.ppmtool.exceptions.ProjectIdException;
+import com.dimitar.ppmtool.exceptions.ProjectNotFoundException;
 import com.dimitar.ppmtool.repositories.BacklogRepository;
 import com.dimitar.ppmtool.repositories.ProjectRepository;
 import com.dimitar.ppmtool.repositories.ProjectTaskRepository;
@@ -22,7 +24,10 @@ public class ProjectTaskService {
 	public ProjectTask addProjectTask(final String projectIdentifier, final ProjectTask projectTask) {
 		final Backlog backlog = backlogRepository.findByProjectIdentifier(projectIdentifier);
 
-		//@todo: no backlog exception
+
+		if (backlog == null) {
+			throw new ProjectNotFoundException("Project with id: '" + projectIdentifier + "' does not exist.");
+		}
 
 		projectTask.setBacklog(backlog);
 		Integer backLogSequence = backlog.getPTSequence();

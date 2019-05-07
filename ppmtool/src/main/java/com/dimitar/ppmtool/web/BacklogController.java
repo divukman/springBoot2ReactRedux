@@ -2,6 +2,9 @@ package com.dimitar.ppmtool.web;
 
 import com.dimitar.ppmtool.domain.Project;
 import com.dimitar.ppmtool.domain.ProjectTask;
+import com.dimitar.ppmtool.exceptions.ProjectIdException;
+import com.dimitar.ppmtool.exceptions.ProjectNotFoundException;
+import com.dimitar.ppmtool.repositories.ProjectRepository;
 import com.dimitar.ppmtool.services.MapValidationErrorService;
 import com.dimitar.ppmtool.services.ProjectTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +27,9 @@ public class BacklogController {
 	@Autowired
 	MapValidationErrorService mapValidationErrorService;
 
+	@Autowired
+	ProjectRepository projectRepository;
+
 	@PostMapping("/{projectIdentifier}")
 	public ResponseEntity<?> addProjectTaskToBacklog(
 			@Valid @RequestBody ProjectTask projectTask,
@@ -43,6 +49,10 @@ public class BacklogController {
 
 	@GetMapping("/{projectIdentifier}")
 	public ResponseEntity<List<ProjectTask>> getProjectBacklog(@PathVariable String projectIdentifier) {
+		final Project project = projectRepository.findByProjectIdentifier(projectIdentifier);
+		if (project == null) {
+			throw new ProjectNotFoundException("Project with id: '" + projectIdentifier + "' does not exist.");
+		}
 		final List<ProjectTask> lstTasks = projectTaskService.getProjectTasks(projectIdentifier);
 		return new ResponseEntity<List<ProjectTask>>(lstTasks, HttpStatus.OK);
 	}
