@@ -52,4 +52,23 @@ public class ProjectTaskService {
 	public List<ProjectTask> getProjectTasks(final String projectIdentifier) {
 		return projectTaskRepository.findAllByProjectIdentifierOrderByPriority(projectIdentifier);
 	}
+
+	public ProjectTask findByProjectSequence(final String projectIdentifier, final String projectSequence) {
+
+		final Backlog backlog = backlogRepository.findByProjectIdentifier(projectIdentifier);
+		if (backlog == null) {
+			throw new ProjectNotFoundException("Project with id '" + projectIdentifier + "' does not exist.");
+		}
+
+		final ProjectTask projectTask = projectTaskRepository.findByProjectSequence(projectSequence);
+		if (projectTask == null) {
+			throw new ProjectNotFoundException("Project task '" + projectSequence + "' not found.");
+		}
+
+		if (!projectTask.getProjectIdentifier().equalsIgnoreCase(projectIdentifier)) {
+			throw new ProjectNotFoundException("Project task '" + projectSequence + "' does not exist in project '" + projectIdentifier + "'");
+		}
+
+		return projectTask;
+	}
 }
