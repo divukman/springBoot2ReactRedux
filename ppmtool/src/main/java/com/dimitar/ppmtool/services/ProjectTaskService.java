@@ -1,6 +1,7 @@
 package com.dimitar.ppmtool.services;
 
 import com.dimitar.ppmtool.domain.Backlog;
+import com.dimitar.ppmtool.domain.Project;
 import com.dimitar.ppmtool.domain.ProjectTask;
 import com.dimitar.ppmtool.exceptions.ProjectIdException;
 import com.dimitar.ppmtool.exceptions.ProjectNotFoundException;
@@ -70,5 +71,20 @@ public class ProjectTaskService {
 		}
 
 		return projectTask;
+	}
+
+	public ProjectTask updateByProjectSequence(final ProjectTask updatedTask, final String projectIdentifier, final String pt_id) {
+		ProjectTask projectTask = this.findByProjectSequence(projectIdentifier,pt_id);
+
+
+
+		projectTask = updatedTask;
+
+		return projectTaskRepository.save(projectTask);
+	}
+
+	public void deletePTByProjectSequence(final String projectIdentifier, final String projectSequence) {
+		ProjectTask projectTask = this.findByProjectSequence(projectIdentifier,projectSequence);
+		projectTaskRepository.delete(projectTask);
 	}
 }
