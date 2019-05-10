@@ -40,8 +40,7 @@ class AddProjectTask extends Component {
       acceptanceCriteria: this.state.acceptanceCriteria,
       status: this.state.status,
       priority: this.state.priority,
-      dueDate: this.state.dueDate,
-      projectIdentifier: id
+      dueDate: this.state.dueDate
     };
 
     console.log(newProjectTask);
@@ -79,6 +78,9 @@ class AddProjectTask extends Component {
                     value={this.state.summary}
                     onChange={this.onChange}
                   />
+                  {errors.summary && (
+                    <div className="invalid-feedback"> {errors.summary} </div>
+                  )}
                 </div>
                 <div className="form-group">
                   <textarea
@@ -90,6 +92,12 @@ class AddProjectTask extends Component {
                     value={this.state.acceptanceCriteria}
                     onChange={this.onChange}
                   />
+                  {errors.acceptanceCriteria && (
+                    <div className="invalid-feedback">
+                      {" "}
+                      {errors.acceptanceCriteria}{" "}
+                    </div>
+                  )}
                 </div>
                 <h6>Due Date</h6>
                 <div className="form-group">
@@ -102,6 +110,9 @@ class AddProjectTask extends Component {
                     value={this.state.dueDate}
                     onChange={this.onChange}
                   />
+                  {errors.dueDate && (
+                    <div className="invalid-feedback"> {errors.dueDate} </div>
+                  )}
                 </div>
                 <div className="form-group">
                   <select
@@ -149,10 +160,15 @@ class AddProjectTask extends Component {
 }
 
 AddProjectTask.propTypes = {
-  addProjectTask: PropTypes.func.isRequired
+  addProjectTask: PropTypes.func.isRequired,
+  errors: PropTypes.object.isRequired
 };
 
+const mapStateToProps = state => ({
+  errors: state.errors
+});
+
 export default connect(
-  null,
+  mapStateToProps,
   { addProjectTask }
 )(AddProjectTask);

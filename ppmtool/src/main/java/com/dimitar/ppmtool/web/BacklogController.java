@@ -34,8 +34,8 @@ public class BacklogController {
 	@PostMapping("/{projectIdentifier}")
 	public ResponseEntity<?> addProjectTaskToBacklog(
 			@Valid @RequestBody ProjectTask projectTask,
-			@PathVariable String projectIdentifier,
-			BindingResult result) {
+			BindingResult result,
+			@PathVariable String projectIdentifier) {
 
 		ResponseEntity<?> errMap = mapValidationErrorService.validateBindingResult(result);
 		if (errMap != null) {
