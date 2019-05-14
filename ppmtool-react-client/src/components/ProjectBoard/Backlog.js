@@ -3,6 +3,23 @@ import ProjectTask from "./ProjectTasks/ProjectTask";
 
 class Backlog extends Component {
   render() {
+    const { project_tasks_prop } = this.props;
+    const tasks = project_tasks_prop.map(project_task => (
+      <ProjectTask key={project_task.id} project_task={project_task} />
+    ));
+
+    const lstTasksToDo = tasks.filter(
+      task => task.props.project_task.status == "TO_DO"
+    );
+
+    const lstTasksInProgress = tasks.filter(
+      task => task.props.project_task.status == "IN_PROGRESS"
+    );
+
+    const lstTasksDone = tasks.filter(
+      task => task.props.project_task.status == "DONE"
+    );
+
     return (
       <div className="container">
         <div className="row">
@@ -13,7 +30,7 @@ class Backlog extends Component {
               </div>
             </div>
 
-            <ProjectTask />
+            {lstTasksToDo}
           </div>
           <div className="col-md-4">
             <div className="card text-center mb-2">
@@ -21,6 +38,8 @@ class Backlog extends Component {
                 <h3>In Progress</h3>
               </div>
             </div>
+
+            {lstTasksInProgress}
           </div>
           <div className="col-md-4">
             <div className="card text-center mb-2">
@@ -28,6 +47,8 @@ class Backlog extends Component {
                 <h3>Done</h3>
               </div>
             </div>
+
+            {lstTasksDone}
           </div>
         </div>
       </div>
