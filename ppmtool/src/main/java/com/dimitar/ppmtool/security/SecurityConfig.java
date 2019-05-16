@@ -29,6 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .headers().frameOptions().sameOrigin().and()  //enable h2 db, allow console
                 .authorizeRequests()
               //  .antMatchers("/", "/**/*.png").permitAll() // for future
+                .antMatchers("/api/users/**").permitAll()
                 .anyRequest().authenticated();
     }
 }
