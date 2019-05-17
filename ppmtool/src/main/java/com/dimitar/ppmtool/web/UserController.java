@@ -1,8 +1,10 @@
 package com.dimitar.ppmtool.web;
 
 import com.dimitar.ppmtool.domain.User;
+import com.dimitar.ppmtool.exceptions.DuplicateUsernameException;
 import com.dimitar.ppmtool.services.MapValidationErrorService;
 import com.dimitar.ppmtool.services.UserService;
+import com.dimitar.ppmtool.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,9 +26,14 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    UserValidator userValidator;
+
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody User user, BindingResult result) {
+
+        userValidator.validate(user, result);
 
         ResponseEntity<?> errorMap = mapValidationErrorService.validateBindingResult(result);
         if (errorMap != null) {

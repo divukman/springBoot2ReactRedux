@@ -1,6 +1,7 @@
 package com.dimitar.ppmtool.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,8 +15,6 @@ import java.util.Collection;
 import java.util.Date;
 
 @Entity
-@Getter
-@Setter
 @NoArgsConstructor
 public class User implements UserDetails {
 
@@ -36,7 +35,7 @@ public class User implements UserDetails {
 
     @Transient
     @JsonIgnore
-    private String confirmPAssword;
+    private String confirmPassword;
 
     private Date created_At;
     private Date updated_At;
@@ -81,6 +80,49 @@ public class User implements UserDetails {
         return true;
     }
 
+    public Long getId() {
+        return id;
+    }
 
-    // One to many with Project
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @JsonIgnore
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    @JsonProperty
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
+    }
+
+// One to many with Project
 }
