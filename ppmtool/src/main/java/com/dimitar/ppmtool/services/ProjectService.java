@@ -4,6 +4,7 @@ import com.dimitar.ppmtool.domain.Backlog;
 import com.dimitar.ppmtool.domain.Project;
 import com.dimitar.ppmtool.domain.User;
 import com.dimitar.ppmtool.exceptions.ProjectIdException;
+import com.dimitar.ppmtool.exceptions.ProjectNotFoundException;
 import com.dimitar.ppmtool.repositories.BacklogRepository;
 import com.dimitar.ppmtool.repositories.ProjectRepository;
 import com.dimitar.ppmtool.repositories.UserRepository;
@@ -29,7 +30,7 @@ public class ProjectService {
 
 			project.setUser(user);
 			project.setProjectLeader(username);
-			
+
 			final String projectIdentifierUppercased = project.getProjectIdentifier().toUpperCase();
 			project.setProjectIdentifier(projectIdentifierUppercased);
 
@@ -50,23 +51,25 @@ public class ProjectService {
 		}
 	}
 
-	public Project findProjectByIdentifier(final String projectIdentifier) {
+	public Project findProjectByIdentifier(final String projectIdentifier, final String username) {
 		final Project project = projectRepository.findByProjectIdentifier(projectIdentifier != null ? projectIdentifier.toUpperCase() : null);
 		if (project == null) {
 			throw new ProjectIdException("Project ID '" + projectIdentifier.toUpperCase() + "' does not exists.");
 		}
+
+		if (!project.getProjectLeader().equals(username)) {
+			throw new ProjectNotFoundException("Project not found in your account.");
+			// @todo: authorization can be done via annotation
+		}
+
 		return project;
 	}
 
-	public Iterable<Project> findAllProjects() {
-		return projectRepository.findAll();
+	public Iterable<Project> findAllProjects(final String username) {
+		return projectRepository.findAllByProjectLeader(username);
 	}
 
-	public void deleteProjectByIdentifier(final String projectIdentifier) {
-		final Project project = projectRepository.findByProjectIdentifier(projectIdentifier.toUpperCase());
-		if (project == null) {
-			throw new ProjectIdException("Can not delete project with identifier: '" + projectIdentifier.toUpperCase() + "'. It does not exists.");
-		}
-		projectRepository.delete(project) ;
+	public void deleteProjectByIdentifier(final String projectIdentifier, final String username) {
+		projectRepository.delete(this.findProjectByIdentifier(projectIdentifier, username)) ;
 	}
 }
