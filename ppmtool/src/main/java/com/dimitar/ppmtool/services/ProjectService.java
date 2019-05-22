@@ -2,9 +2,11 @@ package com.dimitar.ppmtool.services;
 
 import com.dimitar.ppmtool.domain.Backlog;
 import com.dimitar.ppmtool.domain.Project;
+import com.dimitar.ppmtool.domain.User;
 import com.dimitar.ppmtool.exceptions.ProjectIdException;
 import com.dimitar.ppmtool.repositories.BacklogRepository;
 import com.dimitar.ppmtool.repositories.ProjectRepository;
+import com.dimitar.ppmtool.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,15 +14,22 @@ import org.springframework.stereotype.Service;
 public class ProjectService {
 	private final ProjectRepository projectRepository;
 	private final BacklogRepository backlogRepository;
+	private final UserRepository userRepository;
 
 	@Autowired
-	public ProjectService(final ProjectRepository projectRepository, final BacklogRepository backlogRepository) {
+	public ProjectService(final ProjectRepository projectRepository, final BacklogRepository backlogRepository, final UserRepository userRepository) {
 		this.projectRepository = projectRepository;
 		this.backlogRepository = backlogRepository;
+		this.userRepository = userRepository;
 	}
 
-	public Project saveOrUpdateProject(final Project project) {
+	public Project saveOrUpdateProject(final Project project, final String username) {
 		try {
+			final User user = userRepository.findByUsername(username);
+
+			project.setUser(user);
+			project.setProjectLeader(username);
+			
 			final String projectIdentifierUppercased = project.getProjectIdentifier().toUpperCase();
 			project.setProjectIdentifier(projectIdentifierUppercased);
 
