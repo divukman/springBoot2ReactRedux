@@ -22,8 +22,12 @@ public class ProjectTaskService {
 	@Autowired
 	ProjectTaskRepository projectTaskRepository;
 
-	public ProjectTask addProjectTask(final String projectIdentifier, final ProjectTask projectTask) {
-		final Backlog backlog = backlogRepository.findByProjectIdentifier(projectIdentifier);
+	@Autowired
+	ProjectService projectService;
+
+
+	public ProjectTask addProjectTask(final String projectIdentifier, final ProjectTask projectTask, final String username) {
+		final Backlog backlog = projectService.findProjectByIdentifier(projectIdentifier, username).getBacklog();// backlogRepository.findByProjectIdentifier(projectIdentifier);
 
 
 		if (backlog == null) {
@@ -50,13 +54,15 @@ public class ProjectTaskService {
 		return projectTaskRepository.save(projectTask);
 	}
 
-	public List<ProjectTask> getProjectTasks(final String projectIdentifier) {
+	public List<ProjectTask> getProjectTasks(final String projectIdentifier, final String username) {
+		projectService.findProjectByIdentifier(projectIdentifier, username); //Ruzno. Treba anotacijama rjesiti.
+
 		return projectTaskRepository.findAllByProjectIdentifierOrderByPriority(projectIdentifier);
 	}
 
-	public ProjectTask findByProjectSequence(final String projectIdentifier, final String projectSequence) {
+	public ProjectTask findByProjectSequence(final String projectIdentifier, final String projectSequence, final String username) {
 
-		final Backlog backlog = backlogRepository.findByProjectIdentifier(projectIdentifier);
+		final Backlog backlog = projectService.findProjectByIdentifier(projectIdentifier, username).getBacklog();//backlogRepository.findByProjectIdentifier(projectIdentifier);
 		if (backlog == null) {
 			throw new ProjectNotFoundException("Project with id '" + projectIdentifier + "' does not exist.");
 		}
@@ -73,8 +79,8 @@ public class ProjectTaskService {
 		return projectTask;
 	}
 
-	public ProjectTask updateByProjectSequence(final ProjectTask updatedTask, final String projectIdentifier, final String pt_id) {
-		ProjectTask projectTask = this.findByProjectSequence(projectIdentifier,pt_id);
+	public ProjectTask updateByProjectSequence(final ProjectTask updatedTask, final String projectIdentifier, final String pt_id, final String username) {
+		ProjectTask projectTask = this.findByProjectSequence(projectIdentifier,pt_id, username);
 
 
 
@@ -83,8 +89,8 @@ public class ProjectTaskService {
 		return projectTaskRepository.save(projectTask);
 	}
 
-	public void deletePTByProjectSequence(final String projectIdentifier, final String projectSequence) {
-		ProjectTask projectTask = this.findByProjectSequence(projectIdentifier,projectSequence);
+	public void deletePTByProjectSequence(final String projectIdentifier, final String projectSequence, final String username) {
+		ProjectTask projectTask = this.findByProjectSequence(projectIdentifier,projectSequence, username);
 		projectTaskRepository.delete(projectTask);
 	}
 }
