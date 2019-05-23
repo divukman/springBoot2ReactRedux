@@ -24,8 +24,25 @@ public class ProjectService {
 		this.userRepository = userRepository;
 	}
 
+	/**
+	 * Ova metoda mu je trebala ic na 2, bar po mojoj logici, jedna za save, druga za update, ovako je cisti kupus.
+	 * @param project
+	 * @param username
+	 * @return
+	 */
 	public Project saveOrUpdateProject(final Project project, final String username) {
 		try {
+
+			if (project.getId() != null) {
+				Project existingProject = projectRepository.findByProjectIdentifier(project.getProjectIdentifier());
+				if ( (existingProject != null) && !existingProject.getProjectLeader().equals(username)) {
+					throw new ProjectNotFoundException("Not your project dude.");
+				} else {
+					throw new ProjectNotFoundException("Project with id:" + project.getId() + " and identifier: " + project.getProjectIdentifier() + " cannot be updated, it does not exist.");
+				}
+			}
+
+
 			final User user = userRepository.findByUsername(username);
 
 			project.setUser(user);
