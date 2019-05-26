@@ -18,11 +18,14 @@ public class UserValidator implements Validator {
     public void validate(Object object, Errors errors) {
         final User user = (User) object;
 
-        if (user.getPassword().length() < 6) {
+        if (user.getPassword() == null) {
+            errors.rejectValue("password", "Length", "Password can not be null.");
+        }
+        else if (user.getPassword().length() < 6) {
             errors.rejectValue("password", "Length", "Password must be at least 6 characters long.");
         }
 
-        if (!user.getPassword().equals(user.getConfirmPassword())) {
+        if (user.getPassword() != null && !user.getPassword().equals(user.getConfirmPassword())) {
             errors.rejectValue("confirmPassword", "Match", "Passwords must match.");
         }
     }
