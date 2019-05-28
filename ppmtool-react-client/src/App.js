@@ -18,7 +18,9 @@ import Login from "./components/UserManagement/Login";
 import jwt_decode from "jwt-decode";
 import setJWTToken from "./securityUtils/setJWTToken";
 import { SET_CURRENT_USER } from "./actions/types";
+import { logout } from "./actions/securityActions";
 
+alert("a");
 const jwtToken = localStorage.jwtToken;
 if (jwtToken) {
   setJWTToken(jwtToken);
@@ -28,7 +30,11 @@ if (jwtToken) {
     payload: decodedJwtToken
   });
 
-  const currentTimeMillis = Date.now() / 1000;
+  const currentTime = Date.now() / 1000;
+  if (decodedJwtToken.exp < currentTime) {
+    store.dispatch(logout()); //!?! ne znam sta on zeli ovime
+    window.location.href = "/";
+  }
 }
 
 function App() {
